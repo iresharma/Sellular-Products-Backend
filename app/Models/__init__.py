@@ -3,7 +3,6 @@ import graphene
 from pymongo import MongoClient
 from app.constants import DB_URL, DB_NAME
 from certifi import where
-from json import loads
 
 
 client = MongoClient(DB_URL, tls=True, tlsCAFile=where())
@@ -25,7 +24,7 @@ class Query(graphene.ObjectType):
     product = graphene.Field(Product, id=graphene.String())
     products = graphene.Field(
         graphene.List(Product),
-        query=graphene.Enum(ProductQueryEnum),
+        query=graphene.Argument(ProductQueryEnum),
         page=graphene.Int(default_value=0),
         user=graphene.String(default_value=None)
     )

@@ -6,7 +6,11 @@ from app.Models import schema
 app = Flask(__name__)
 CORS(app)
 
-# from app.routes import routes
+
+@app.route('/s3', methods=['GET', 'POST', 'DELETE', 'PUT'])
+def s3Handler():
+    return "Hello S3"
+
 
 app.add_url_rule(
     '/graphql',
