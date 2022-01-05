@@ -1,24 +1,24 @@
 import graphene
 
+
 class Product(graphene.ObjectType):
     '''
         This is the class for the Product object
     '''
 
-    # Mongo db id
+    # MongoDb id
     id = graphene.String()
 
-    # Product title
-    title = graphene.String(value = graphene.String(default_value = ""))
-    description = graphene.String(value = graphene.String(default_value = ""))
-    askingPrice = graphene.Float(value = graphene.Float(default_value = 0.0))
+    title = graphene.String(value=graphene.String(default_value=""))
+    description = graphene.String(value=graphene.String(default_value=""))
+    askingPrice = graphene.Float(value=graphene.Float(default_value=0.0))
     images = graphene.List(graphene.String)
     category = graphene.String()
 
     # Analytics pointers
     viewCount = graphene.Int()
     bidCount = graphene.Int()
-    viewTime = graphene.Float() # in seconds
+    viewTime = graphene.Float()  # in seconds
 
     # DB client
     dbClient = None
@@ -31,18 +31,22 @@ class Product(graphene.ObjectType):
             self.dbClient = dbClient
         if id:
             self.get_product_by_id(id)
-        elif data:
+        if data:
             self.product = data
+            self.dbClient.products.update_one(
+                {"_id": id}, {"$inc": {"viewCount": 1}})
+            # self.dbClient.categories.update_one(
+            #     {"_id": data['category']}, {"$inc": {"nHits": 1}})
 
     def resolve_id(root, info, value=None):
         return root.product['_id']
-            
+
     def resolve_title(root, info, value=None):
         return root.product['title']
 
     def resolve_description(root, info, value=None):
         return root.product['description']
-    
+
     def resolve_askingPrice(root, info, value=None):
         return root.product['askingPrice']
 
@@ -60,15 +64,16 @@ class Product(graphene.ObjectType):
 
     def resolve_viewTime(root, info, value=None):
         return root.product['viewTime']
-    
-    def get_products(root, info):
-        return "Products"
-
 
     # Database functions
+
     def get_product_by_id(self, id):
         '''
             Db function to get a product by id
         '''
-        data = self.dbClient.find_one({"_id": id})
+        data = self.dbClient.products.find_one({"_id": id})
+        self.dbClient.products.update_one(
+            {"_id": id}, {"$inc": {"viewCount": 1}})
+        self.dbClient.categories.update_one(
+            {"_id": data['category']}, {"$inc": {"nHits": 1}})
         self.product = data
