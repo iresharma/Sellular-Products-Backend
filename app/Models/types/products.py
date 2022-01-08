@@ -74,6 +74,6 @@ class Product(graphene.ObjectType):
         data = self.dbClient.products.find_one({"_id": id})
         self.dbClient.products.update_one(
             {"_id": id}, {"$inc": {"viewCount": 1}})
-        self.dbClient.categories.update_one(
-            {"_id": data['category']}, {"$inc": {"nHits": 1}})
+        # self.dbClient.categories.update_one(
+        #     {"_id": data['category']}, {"$inc": {"nHits": 1}})
         self.product = data
