@@ -1,5 +1,5 @@
 import graphene
-from app.Models.products import Product
+from app.Models.types.products import Product
 
 class Category(graphene.ObjectType):
     '''
