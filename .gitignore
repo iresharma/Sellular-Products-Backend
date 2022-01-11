@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+new_user_credentials.csv
+creds
+
 # C extensions
 *.so
 
