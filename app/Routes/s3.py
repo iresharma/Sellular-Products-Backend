@@ -1,7 +1,9 @@
 from app import app
 import boto
+from app.heplers.auth import requires_auth
 from app.constants import AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY, PRODUCT_BUCKET_NAME
 
+@requires_auth
 @app.route('/s3', methods=['GET', 'POST', 'DELETE', 'PUT'])
 def s3Handler():
     try:
